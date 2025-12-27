@@ -3,107 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caja de Amor - Gael & Sarely</title>
+    <title>Caja de Amor - Gael Ruiz para Sarely Ibarra</title>
     <style>
         :root { --paper: #fdfaf3; --env-green: #1b3022; --gold: #c5a059; --wax: #8b0000; }
         body { background: #ffffff; margin: 0; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-        
-        /* HEADER SECTION */
         #memory-box { padding: 40px 20px; text-align: center; width: 100%; max-width: 600px; box-sizing: border-box; }
-        h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; font-size: 28px; }
-        .subtitle { color: var(--gold); letter-spacing: 1px; text-transform: uppercase; font-size: 11px; margin-bottom: 40px; line-height: 1.4; }
-        
-        /* INBOX LIST */
+        h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; }
+        .subtitle { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-size: 12px; margin-bottom: 40px; }
         .envelope-item { background: var(--env-green); padding: 20px; border-radius: 4px; border: 1px solid var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .env-info { text-align: left; color: var(--gold); }
         .env-date { font-size: 10px; opacity: 0.8; }
         .env-title { font-size: 16px; font-style: italic; display: block; }
         
-        /* OVERLAY & SCENE */
+        /* OVERLAY ADJUSTMENTS */
         #envelope-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; justify-content: center; align-items: center; z-index: 100; }
-        .scene { width: 90vw; max-width: 380px; height: 260px; perspective: 1500px; margin-top: -40px; }
+        
+        /* RESPONSIVE SCENE: Shrinks for Phones */
+        .scene { width: 90vw; max-width: 400px; height: 280px; perspective: 1500px; margin-top: -50px; }
         .envelope { width: 100%; height: 100%; position: relative; transition: transform 1s; transform-style: preserve-3d; }
         .envelope.is-flipped { transform: rotateY(180deg); }
-        
-        /* ENVELOPE SIDES */
         .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 4px; }
         .front { background: var(--env-green); display: flex; justify-content: center; align-items: center; }
-        .front-border { width: 90%; height: 85%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; text-align: center; padding: 10px; box-sizing: border-box; }
-        .front-text { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-style: italic; font-size: 12px; }
+        .front-border { width: 90%; height: 85%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; }
+        .front-text { color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-style: italic; font-size: 14px; }
         
         .back { background: #15251a; transform: rotateY(180deg); }
-        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 45vw solid transparent; border-right: 45vw solid transparent; border-top: 140px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
-        @media (min-width: 420px) { .flap { border-left: 190px solid transparent; border-right: 190px solid transparent; } }
+        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 45vw solid transparent; border-right: 45vw solid transparent; border-top: 150px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
+        @media (min-width: 500px) { .flap { border-left: 200px solid transparent; border-right: 200px solid transparent; } }
 
-        .wax-seal { position: absolute; top: 100px; left: calc(50% - 25px); width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); cursor: pointer; }
+        .wax-seal { position: absolute; top: 110px; left: calc(50% - 25px); width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
         
-        /* THE LETTER */
-        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* CARD ADJUSTMENTS */
+        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; }
         .is-open .flap { transform: rotateX(180deg); z-index: 1; }
         .is-open .wax-seal { opacity: 0; pointer-events: none; }
-        .is-open .card { opacity: 1; height: 400px; transform: translateY(-180px); z-index: 12; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .card-content { border: 1px solid var(--gold); height: 100%; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-        .message { font-size: 14px; line-height: 1.6; font-style: italic; color: #2c3e50; margin: 10px 0; }
-        .signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; color: var(--env-green); }
+        .is-open .card { opacity: 1; height: 420px; transform: translateY(-200px); z-index: 12; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .card-content { border: 1px solid var(--gold); height: 100%; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+        .message { font-size: 14px; line-height: 1.5; font-style: italic; color: #2c3e50; }
+        .signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 15px; }
         .close-instruction { position: fixed; bottom: 30px; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
     <div id="memory-box">
-        <h1>Caja de Amor</h1>
-        <div class="subtitle">De Gael Ruiz para Sarely Ibarra</div>
-        
+        <h1>Caja de Memorias</h1>
+        <div class="subtitle">De: Gael Ruiz</div>
         <div class="envelope-item" onclick="openEnvelope()">
             <div class="env-info">
                 <span class="env-date">27 de Diciembre, 2025</span>
-                <span class="env-title">Feliz Cumpleaños, Sarely</span>
+                <span class="env-title">Feliz Cumpleaños</span>
             </div>
             <div style="color: var(--gold); font-size: 24px;">✉</div>
         </div>
-        
-        <p style="font-size: 10px; color: #ccc; margin-top: 40px;">Más memorias próximamente...</p>
     </div>
 
     <div id="envelope-overlay">
         <div class="scene">
             <div class="envelope" id="env">
                 <div class="side front" onclick="this.parentElement.classList.add('is-flipped')">
-                    <div class="front-border">
-                        <span class="front-text">Para: Sarely Ibarra</span>
-                    </div>
+                    <div class="front-border"><span class="front-text">Para Ti</span></div>
                 </div>
                 <div class="side back">
                     <div class="flap"></div>
                     <div class="wax-seal" onclick="event.stopPropagation(); this.parentElement.parentElement.classList.add('is-open')">G</div>
-                    <div class="card" onclick="event.stopPropagation(); closeEnvelope()">
+                    <div class="card" onclick="event.stopPropagation(); document.getElementById('env').classList.remove('is-open'); setTimeout(() => { document.getElementById('env').classList.remove('is-flipped'); setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800); }, 800);">
                         <div class="card-content">
-                            <div style="font-size: 10px; color: var(--gold); margin-bottom: 5px;">27 • 12 • 2025</div>
-                            <p class="message">"Feliz Cumpleaños princesa, que te la pases de lo mejor en este dia tan bonito. Gracias por hacer el mundo más lindo con tu forma de ser. Te amo y te deseo lo mejor hoy en tu día y siempre❤️."</p>
-                            <div style="font-size: 16px; color: var(--env-green); font-weight: bold;">Te amo</div>
+                            <div style="font-size: 10px; color: var(--gold);">27 / 12 / 2025</div>
+                            <p class="message"> Feliz Cumpleaños princesa, que te la pases de lo mejor en este dia tan bonito. Gracias por hacer el mundo más lindo con tu forma de ser. Te amo y te deseo lo mejor hoy en tu día y siempre❤️.</p>
+                            <div style="font-size: 16px; color: var(--env-green);">Te amo</div>
                             <div class="signature">Gael Ruiz</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="close-instruction">Toca la carta para guardarla</div>
+        <div class="close-instruction">Toca la carta para guardar</div>
     </div>
 
     <script>
-        function openEnvelope() { 
-            document.getElementById('envelope-overlay').style.display = 'flex'; 
-        }
-        function closeEnvelope() {
-            const env = document.getElementById('env');
-            env.classList.remove('is-open');
-            setTimeout(() => {
-                env.classList.remove('is-flipped');
-                setTimeout(() => {
-                    document.getElementById('envelope-overlay').style.display = 'none';
-                }, 800);
-            }, 800);
-        }
+        function openEnvelope() { document.getElementById('envelope-overlay').style.display = 'flex'; }
     </script>
 </body>
 </html>
