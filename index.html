@@ -8,27 +8,27 @@
         :root { --paper: #fdfaf3; --env-green: #1b3022; --gold: #c5a059; --wax: #8b0000; }
         body { background: #ffffff; margin: 0; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        /* HEADER SECTION */
         #memory-box { padding: 40px 20px; text-align: center; width: 100%; max-width: 600px; box-sizing: border-box; }
         h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; font-size: 28px; }
-        .subtitle { color: var(--gold); letter-spacing: 1px; text-transform: uppercase; font-size: 11px; margin-bottom: 40px; line-height: 1.4; }
+        .subtitle { color: var(--gold); letter-spacing: 1px; text-transform: uppercase; font-size: 11px; margin-bottom: 25px; line-height: 1.4; }
         
-        /* INBOX LIST */
+        /* INSTRUCCIONES SIMPLIFICADAS */
+        .instructions { background: #fdfaf3; border: 1px solid var(--gold); padding: 15px; border-radius: 8px; margin-bottom: 30px; }
+        .instructions p { font-size: 13px; color: var(--env-green); margin: 8px 0; font-weight: bold; }
+
         .envelope-item { background: var(--env-green); padding: 20px; border-radius: 4px; border: 1px solid var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .env-info { text-align: left; color: var(--gold); }
         .env-date { font-size: 10px; opacity: 0.8; }
         .env-title { font-size: 16px; font-style: italic; display: block; }
         
-        /* OVERLAY & SCENE */
         #envelope-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; justify-content: center; align-items: center; z-index: 100; }
         .scene { width: 90vw; max-width: 380px; height: 260px; perspective: 1500px; margin-top: -40px; }
         .envelope { width: 100%; height: 100%; position: relative; transition: transform 1s; transform-style: preserve-3d; }
         .envelope.is-flipped { transform: rotateY(180deg); }
         
-        /* ENVELOPE SIDES */
         .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 4px; }
         .front { background: var(--env-green); display: flex; justify-content: center; align-items: center; }
-        .front-border { width: 90%; height: 85%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; text-align: center; padding: 10px; box-sizing: border-box; }
+        .front-border { width: 90%; height: 85%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; }
         .front-text { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-style: italic; font-size: 12px; }
         
         .back { background: #15251a; transform: rotateY(180deg); }
@@ -37,15 +37,14 @@
 
         .wax-seal { position: absolute; top: 100px; left: calc(50% - 25px); width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); cursor: pointer; }
         
-        /* THE LETTER */
-        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; }
         .is-open .flap { transform: rotateX(180deg); z-index: 1; }
         .is-open .wax-seal { opacity: 0; pointer-events: none; }
         .is-open .card { opacity: 1; height: 400px; transform: translateY(-180px); z-index: 12; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .card-content { border: 1px solid var(--gold); height: 100%; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-        .message { font-size: 14px; line-height: 1.6; font-style: italic; color: #2c3e50; margin: 10px 0; }
+        .message { font-size: 14px; line-height: 1.6; font-style: italic; color: #2c3e50; }
         .signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; color: var(--env-green); }
-        .close-instruction { position: fixed; bottom: 30px; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .close-instruction { position: fixed; bottom: 30px; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: center; width: 100%; }
     </style>
 </head>
 <body>
@@ -54,6 +53,13 @@
         <h1>Caja de Amor</h1>
         <div class="subtitle">De Gael Ruiz para Sarely Ibarra</div>
         
+        <div class="instructions">
+            <p>1. Presiona la carta</p>
+            <p>2. Presiona el sobre</p>
+            <p>3. Presiona la G</p>
+            <p>4. Cuando termines presiona la carta</p>
+        </div>
+
         <div class="envelope-item" onclick="openEnvelope()">
             <div class="env-info">
                 <span class="env-date">27 de Diciembre, 2025</span>
@@ -61,17 +67,13 @@
             </div>
             <div style="color: var(--gold); font-size: 24px;">✉</div>
         </div>
-        
-        <p style="font-size: 10px; color: #ccc; margin-top: 40px;">Más memorias próximamente...</p>
     </div>
 
     <div id="envelope-overlay">
         <div class="scene">
             <div class="envelope" id="env">
                 <div class="side front" onclick="this.parentElement.classList.add('is-flipped')">
-                    <div class="front-border">
-                        <span class="front-text">Para: Sarely Ibarra</span>
-                    </div>
+                    <div class="front-border"><span class="front-text">Para Ti</span></div>
                 </div>
                 <div class="side back">
                     <div class="flap"></div>
@@ -87,21 +89,17 @@
                 </div>
             </div>
         </div>
-        <div class="close-instruction">Toca la carta para guardarla</div>
+        <div class="close-instruction">Presiona la carta para guardar</div>
     </div>
 
     <script>
-        function openEnvelope() { 
-            document.getElementById('envelope-overlay').style.display = 'flex'; 
-        }
+        function openEnvelope() { document.getElementById('envelope-overlay').style.display = 'flex'; }
         function closeEnvelope() {
             const env = document.getElementById('env');
             env.classList.remove('is-open');
             setTimeout(() => {
                 env.classList.remove('is-flipped');
-                setTimeout(() => {
-                    document.getElementById('envelope-overlay').style.display = 'none';
-                }, 800);
+                setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800);
             }, 800);
         }
     </script>
