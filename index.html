@@ -1,223 +1,78 @@
-<!DOCTYPE html>										
-"<html lang=""es"">"										
-<head>										
-"<meta charset=""UTF-8"">"										
-"<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">"										
-<title>Caja de Memorias - Gael Ruiz</title>										
-<style>										
-:root {										
---paper: #fdfaf3;										
---env-green: #1b3022;										
---gold: #c5a059;										
---wax: #8b0000;										
-}										
-										
-body {										
-background: #ffffff;										
-margin: 0;										
-font-family: 'Georgia', serif;										
-display: flex;										
-flex-direction: column;										
-align-items: center;										
-}										
-										
-/* INBOX / MEMORY BOX STYLES */										
-#memory-box {										
-padding: 40px 20px;										
-text-align: center;										
-width: 100%;										
-max-width: 600px;										
-}										
-										
-h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; }										
-.subtitle { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-size: 12px; margin-bottom: 40px; }										
-										
-.envelope-item {										
-background: var(--env-green);										
-padding: 20px;										
-border-radius: 4px;										
-border: 1px solid var(--gold);										
-cursor: pointer;										
-transition: transform 0.3s ease;										
-display: flex;										
-justify-content: space-between;										
-align-items: center;										
-box-shadow: 0 10px 20px rgba(0,0,0,0.1);										
-margin-bottom: 20px;										
-}										
-										
-.envelope-item:hover { transform: scale(1.02); }										
-.env-info { text-align: left; color: var(--gold); }										
-.env-date { font-size: 10px; opacity: 0.8; }										
-.env-title { font-size: 16px; font-style: italic; display: block; }										
-										
-/* THE ANIMATED ENVELOPE MODAL */										
-#envelope-overlay {										
-position: fixed;										
-top: 0; left: 0; width: 100%; height: 100%;										
-background: white;										
-display: none; /* Hidden by default */										
-justify-content: center;										
-align-items: center;										
-z-index: 100;										
-}										
-										
-.scene { width: 90vw; max-width: 450px; height: 320px; perspective: 1500px; }										
-										
-.envelope {										
-width: 100%; height: 100%;										
-position: relative;										
-transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);										
-transform-style: preserve-3d;										
-}										
-										
-.envelope.is-flipped { transform: rotateY(180deg); }										
-										
-.side {										
-position: absolute; width: 100%; height: 100%;										
-backface-visibility: hidden; border-radius: 4px;										
-}										
-										
-.front {										
-background: var(--env-green);										
-display: flex; justify-content: center; align-items: center;										
-}										
-										
-.front-border {										
-width: 90%; height: 85%;										
-border: 2px solid var(--gold);										
-display: flex; justify-content: center; align-items: center;										
-}										
-										
-.front-text { color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-style: italic; }										
-										
-.back { background: #15251a; transform: rotateY(180deg); }										
-										
-.flap {										
-position: absolute; top: 0; width: 0; height: 0;										
-border-left: 225px solid transparent;										
-border-right: 225px solid transparent;										
-border-top: 170px solid #243d2c;										
-transform-origin: top;										
-transition: transform 0.6s ease;										
-z-index: 10;										
-}										
-										
-.wax-seal {										
-position: absolute; top: 130px; left: calc(50% - 30px);										
-width: 60px; height: 60px;										
-background: radial-gradient(circle at 30% 30%, #a30000, #5a0000);										
-border-radius: 50%;										
-z-index: 11;										
-display: flex; justify-content: center; align-items: center;										
-color: var(--gold); font-size: 24px;										
-box-shadow: 0 4px 8px rgba(0,0,0,0.5);										
-}										
-										
-.card {										
-position: absolute; top: 10px; left: 15px;										
-width: calc(100% - 30px); height: 100%;										
-background: var(--paper);										
-background-image: url('https://www.transparenttextures.com/patterns/linen-paper.png');										
-padding: 30px; box-sizing: border-box;										
-transition: all 0.8s ease-in-out;										
-opacity: 0; z-index: 5;										
-}										
-										
-/* OPEN STATES */										
-.is-open .flap { transform: rotateX(180deg); z-index: 1; }										
-.is-open .wax-seal { opacity: 0; pointer-events: none; }										
-.is-open .card {										
-opacity: 1; height: 500px;										
-transform: translateY(-240px);										
-z-index: 12;										
-box-shadow: 0 30px 60px rgba(0,0,0,0.2);										
-}										
-										
-.card-content {										
-border: 1px solid var(--gold);										
-height: 100%; padding: 20px;										
-text-align: center; display: flex; flex-direction: column; justify-content: center;										
-}										
-										
-.message { font-size: 15px; line-height: 1.6; font-style: italic; }										
-.signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 22px; margin-top: 20px; }										
-										
-.close-instruction {										
-position: fixed; bottom: 20px; color: #888; font-size: 12px;										
-text-transform: uppercase; letter-spacing: 1px;										
-}										
-</style>										
-</head>										
-<body>										
-										
-"<div id=""memory-box"">"										
-<h1>Caja de Memorias</h1>										
-"<div class=""subtitle"">De: Gael Ruiz</div>"										
-										
-"<div class=""envelope-item"" onclick=""openEnvelope()"">"										
-"<div class=""env-info"">"										
-"<span class=""env-date"">27 de Diciembre, 2025</span>"										
-"<span class=""env-title"">Feliz Cumpleaños</span>"										
-</div>										
-"<div style=""color: var(--gold); font-size: 24px;"">✉</div>"										
-</div>										
-										
-"<p style=""color: #ccc; font-size: 12px; margin-top: 50px;"">Más memorias próximamente...</p>"										
-</div>										
-										
-"<div id=""envelope-overlay"">"										
-"<div class=""scene"">"										
-"<div class=""envelope"" id=""env"">"										
-"<div class=""side front"" onclick=""flipEnv()"">"										
-"<div class=""front-border""><span class=""front-text"">Feliz Cumpleaños</span></div>"										
-</div>										
-"<div class=""side back"">"										
-"<div class=""flap""></div>"										
-"<div class=""wax-seal"" onclick=""openFlap(event)"">G</div>"										
-"<div class=""card"" onclick=""closeEverything(event)"">"										
-"<div class=""card-content"">"										
-"<div style=""font-size: 11px; color: var(--gold);"">27 / 12 / 2025</div>"										
-"<p class=""message"">"										
-Eres la luz que ilumina cada uno de mis días. Tu belleza no solo está en tu sonrisa, sino en la bondad de tu corazón y en la forma en que haces que el mundo sea mejor con solo estar en él.										
-</p>										
-"<div style=""font-size: 18px; color: var(--env-green);"">Te amo</div>"										
-"<div class=""signature"">Gael Ruiz</div>"										
-</div>										
-</div>										
-</div>										
-</div>										
-</div>										
-"<div class=""close-instruction"">Toca la carta para guardar</div>"										
-</div>										
-										
-<script>										
-const overlay = document.getElementById('envelope-overlay');										
-const env = document.getElementById('env');										
-										
-function openEnvelope() {										
-overlay.style.display = 'flex';										
-}										
-										
-function flipEnv() {										
-env.classList.add('is-flipped');										
-}										
-										
-function openFlap(e) {										
-e.stopPropagation();										
-env.classList.add('is-open');										
-}										
-										
-function closeEverything(e) {										
-e.stopPropagation();										
-env.classList.remove('is-open');										
-setTimeout(() => {										
-env.classList.remove('is-flipped');										
-setTimeout(() => {										
-overlay.style.display = 'none';										
-}, 800);										
-}, 800);										
-}										
-</script>										
-</body>										
-</html>										
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja de Memorias - Gael Ruiz</title>
+    <style>
+        :root { --paper: #fdfaf3; --env-green: #1b3022; --gold: #c5a059; --wax: #8b0000; }
+        body { background: #ffffff; margin: 0; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; }
+        #memory-box { padding: 40px 20px; text-align: center; width: 100%; max-width: 600px; }
+        h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; }
+        .subtitle { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-size: 12px; margin-bottom: 40px; }
+        .envelope-item { background: var(--env-green); padding: 20px; border-radius: 4px; border: 1px solid var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; transition: 0.3s; }
+        .env-info { text-align: left; color: var(--gold); }
+        .env-date { font-size: 10px; opacity: 0.8; }
+        .env-title { font-size: 16px; font-style: italic; display: block; }
+        #envelope-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; justify-content: center; align-items: center; z-index: 100; }
+        .scene { width: 90vw; max-width: 450px; height: 320px; perspective: 1500px; }
+        .envelope { width: 100%; height: 100%; position: relative; transition: transform 1s; transform-style: preserve-3d; }
+        .envelope.is-flipped { transform: rotateY(180deg); }
+        .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 4px; }
+        .front { background: var(--env-green); display: flex; justify-content: center; align-items: center; }
+        .front-border { width: 90%; height: 85%; border: 2px solid var(--gold); display: flex; justify-content: center; align-items: center; }
+        .front-text { color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-style: italic; }
+        .back { background: #15251a; transform: rotateY(180deg); }
+        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 225px solid transparent; border-right: 225px solid transparent; border-top: 170px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
+        .wax-seal { position: absolute; top: 130px; left: calc(50% - 30px); width: 60px; height: 60px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+        .card { position: absolute; top: 10px; left: 15px; width: calc(100% - 30px); height: 100%; background: var(--paper); padding: 30px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; }
+        .is-open .flap { transform: rotateX(180deg); z-index: 1; }
+        .is-open .wax-seal { opacity: 0; pointer-events: none; }
+        .is-open .card { opacity: 1; height: 500px; transform: translateY(-240px); z-index: 12; box-shadow: 0 30px 60px rgba(0,0,0,0.2); }
+        .card-content { border: 1px solid var(--gold); height: 100%; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .message { font-size: 15px; line-height: 1.6; font-style: italic; color: #2c3e50; }
+        .signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 22px; margin-top: 20px; }
+        .close-instruction { position: fixed; bottom: 20px; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div id="memory-box">
+        <h1>Caja de Memorias</h1>
+        <div class="subtitle">De: Gael Ruiz</div>
+        <div class="envelope-item" onclick="openEnvelope()">
+            <div class="env-info">
+                <span class="env-date">27 de Diciembre, 2025</span>
+                <span class="env-title">Feliz Cumpleaños</span>
+            </div>
+            <div style="color: var(--gold); font-size: 24px;">✉</div>
+        </div>
+    </div>
+
+    <div id="envelope-overlay">
+        <div class="scene">
+            <div class="envelope" id="env">
+                <div class="side front" onclick="this.parentElement.classList.add('is-flipped')">
+                    <div class="front-border"><span class="front-text">Feliz Cumpleaños</span></div>
+                </div>
+                <div class="side back">
+                    <div class="flap"></div>
+                    <div class="wax-seal" onclick="event.stopPropagation(); this.parentElement.parentElement.classList.add('is-open')">G</div>
+                    <div class="card" onclick="event.stopPropagation(); document.getElementById('env').classList.remove('is-open'); setTimeout(() => { document.getElementById('env').classList.remove('is-flipped'); setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800); }, 800);">
+                        <div class="card-content">
+                            <div style="font-size: 11px; color: var(--gold);">27 / 12 / 2025</div>
+                            <p class="message">Eres la luz que ilumina cada uno de mis días. Tu belleza no solo está en tu sonrisa, sino en la bondad de tu corazón y en la forma en que haces que el mundo sea mejor con solo estar en él.</p>
+                            <div style="font-size: 18px; color: var(--env-green);">Te amo</div>
+                            <div class="signature">Gael Ruiz</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="close-instruction">Toca la carta para guardar</div>
+    </div>
+
+    <script>
+        function openEnvelope() { document.getElementById('envelope-overlay').style.display = 'flex'; }
+    </script>
+</body>
+</html>
