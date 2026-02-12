@@ -7,43 +7,57 @@
     <style>
         :root { --paper: #fdfaf3; --env-green: #1b3022; --gold: #c5a059; --wax: #8b0000; }
         body { background: #ffffff; margin: 0; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        
         #memory-box { padding: 60px 20px; text-align: center; width: 100%; max-width: 600px; box-sizing: border-box; }
         h1 { font-style: italic; color: var(--env-green); margin-bottom: 5px; font-size: 32px; font-weight: normal; }
         .subtitle { color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; font-size: 10px; margin-bottom: 50px; line-height: 1.4; opacity: 0.8; }
+        
         .main-hint { font-size: 10px; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; font-weight: bold; }
         .envelope-item { background: var(--env-green); padding: 22px; border-radius: 4px; border: 1px solid var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 20px; }
         .env-info { text-align: left; color: var(--gold); }
         .env-date { font-size: 9px; opacity: 0.7; letter-spacing: 0.5px; }
         .env-title { font-size: 17px; font-style: italic; display: block; margin-top: 4px; }
-        .coming-soon { font-size: 11px; color: #bbb; margin-top: 40px; font-style: italic; letter-spacing: 1px; }
+        
         #envelope-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
         .scene { width: 92vw; max-width: 380px; height: 260px; perspective: 1500px; }
         .envelope { width: 100%; height: 100%; position: relative; transition: transform 1s; transform-style: preserve-3d; }
         .envelope.is-flipped { transform: rotateY(180deg); }
+        
         .side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 4px; }
         .front { background: var(--env-green); display: flex; justify-content: center; align-items: center; }
         .front-border { width: 90%; height: 85%; border: 1.5px solid var(--gold); display: flex; justify-content: center; align-items: center; }
         .front-text { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-style: italic; font-size: 11px; }
+        
         .back { background: #15251a; transform: rotateY(180deg); }
-        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 46vw solid transparent; border-right: 46vw solid transparent; border-top: 140px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
-        .wax-seal { position: absolute; top: 100px; left: calc(50% - 25px); width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: pointer; }
-        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 25px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; }
+        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 46vw solid transparent; border-right: 46vw solid transparent; border-top: 130px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
+
+        /* SELLO "G" CENTRADO Y DERECHO */
+        .wax-seal { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 24px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; overflow: hidden; }
         .is-open .flap { transform: rotateX(180deg); z-index: 1; }
         .is-open .wax-seal { opacity: 0; pointer-events: none; }
-        .is-open .card { opacity: 1; height: 420px; transform: translateY(-190px); z-index: 12; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .is-open .card { opacity: 1; height: 450px; transform: translateY(-210px); z-index: 12; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        
         .card-content { border: 1px solid var(--gold); height: 100%; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-        .message { font-size: 15px; line-height: 1.6; font-style: italic; color: #2c3e50; }
-        .signature { text-align: right; font-family: 'Brush Script MT', cursive; font-size: 22px; margin-top: 15px; color: var(--env-green); }
+        .message { font-size: 15px; line-height: 1.4; font-style: italic; color: #2c3e50; margin: 10px 0; }
+        
+        /* BOTONES SI / NO */
+        .btn-container { display: flex; justify-content: space-around; margin-top: 20px; gap: 10px; }
+        .btn { background: var(--env-green); color: var(--gold); border: 1px solid var(--gold); padding: 8px 5px; border-radius: 4px; font-size: 10px; cursor: pointer; flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; font-weight: bold; }
+        .btn span { font-size: 8px; font-weight: normal; margin-top: 4px; text-transform: none; }
+
         #dynamic-hint { position: fixed; bottom: 40px; color: #aaa; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; width: 100%; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div id="memory-box">
         <h1>Caja de Amor</h1>
         <div class="subtitle">De Gael Ruiz para Sarely Ibarra</div>
         <div class="main-hint">Presiona la carta</div>
-        
-        <div class="envelope-item" onclick="openEnvelope('Eres la luz que ilumina cada uno de mis días. Tu belleza no solo está en tu sonrisa, sino en la bondad de tu corazón.', 'Para: Sarely', '27 • 12 • 2025')">
+
+        <div class="envelope-item" onclick="openEnvelope('Eres la luz que ilumina cada uno de mis días. Tu belleza no solo está en tu sonrisa, sino en la bondad de tu corazón.', 'Para: Sarely', '27 • 12 • 2025', false)">
             <div class="env-info">
                 <span class="env-date">27 de Diciembre, 2025</span>
                 <span class="env-title">Feliz Cumpleaños</span>
@@ -51,15 +65,13 @@
             <div style="color: var(--gold); font-size: 22px;">✉</div>
         </div>
 
-        <div class="envelope-item" onclick="openEnvelope('Sarely, eres la persona más especial que he conocido. Me harías muy feliz si aceptaras algo... <br><br><b>¿Quieres ser mi Valentín?</b>', 'San Valentín', '14 • 02 • 2026')">
+        <div class="envelope-item" onclick="openEnvelope('Hola mi princesa te quiero hacer una pregunta muy importante…<br><br><b style=\'font-size:18px\'>¿Quieres ser mi San Valentín?</b>', 'San Valentín', '14 • 02 • 2026', true)">
             <div class="env-info">
                 <span class="env-date">14 de Febrero, 2026</span>
                 <span class="env-title">Una pregunta especial...</span>
             </div>
             <div style="color: #ff4d6d; font-size: 22px;">❤</div>
         </div>
-
-        <p class="coming-soon">Más memorias próximamente...</p>
     </div>
 
     <div id="envelope-overlay">
@@ -69,12 +81,19 @@
                 <div class="side back">
                     <div class="flap"></div>
                     <div class="wax-seal" onclick="openCard(event)">G</div>
-                    <div class="card" onclick="event.stopPropagation(); closeEnvelope()">
+                    <div class="card" id="main-card">
                         <div class="card-content">
-                            <div style="font-size: 10px; color: var(--gold); margin-bottom: 8px;" id="card-date">FECHA</div>
+                            <div style="font-size: 10px; color: var(--gold); margin-bottom: 5px;" id="card-date">FECHA</div>
                             <p class="message" id="card-message"></p>
-                            <div style="font-size: 18px; color: var(--env-green); font-weight: bold; margin-top: 10px;">Con amor,</div>
-                            <div class="signature">Gael Ruiz</div>
+                            
+                            <div id="valentin-btns" style="display:none">
+                                <div class="btn-container">
+                                    <div class="btn" onclick="closeEnvelope()">SI <span>(Mándame 2 Besos)</span></div>
+                                    <div class="btn" onclick="closeEnvelope()">NO <span>(Mándame un Beso)</span></div>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 16px; color: var(--env-green); font-weight: bold; margin-top: 10px;">Con amor, <span style="font-family: \'Brush Script MT\', cursive; font-size: 20px; display: block;">Gael Ruiz</span></div>
                         </div>
                     </div>
                 </div>
@@ -87,21 +106,29 @@
         const hint = document.getElementById('dynamic-hint');
         const env = document.getElementById('env');
         const msg = document.getElementById('card-message');
-        const label = document.getElementById('front-label');
-        const dateDisplay = document.getElementById('card-date');
+        const dateDisp = document.getElementById('card-date');
+        const btns = document.getElementById('valentin-btns');
 
-        function openEnvelope(text, frontText, dateText) { 
-            msg.innerHTML = text; label.innerText = frontText; dateDisplay.innerText = dateText;
-            document.getElementById('envelope-overlay').style.display = 'flex'; hint.innerText = "Presiona el sobre";
+        function openEnvelope(text, label, date, showBtns) { 
+            msg.innerHTML = text;
+            document.getElementById('front-label').innerText = label;
+            dateDisp.innerText = date;
+            btns.style.display = showBtns ? 'block' : 'none';
+            document.getElementById('envelope-overlay').style.display = 'flex';
+            hint.innerText = "Presiona el sobre";
         }
+
         function flipEnvelope() { env.classList.add('is-flipped'); hint.innerText = "Presiona la G"; }
         function openCard(e) { e.stopPropagation(); env.classList.add('is-open'); hint.innerText = "Cuando termines presiona la carta"; }
+        
         function closeEnvelope() {
             env.classList.remove('is-open');
-            setTimeout(() => { env.classList.remove('is-flipped'); setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800); }, 800);
+            setTimeout(() => {
+                env.classList.remove('is-flipped');
+                setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800);
+            }, 800);
         }
     </script>
 </body>
 </html>
-
 
