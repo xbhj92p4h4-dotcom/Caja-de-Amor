@@ -28,11 +28,29 @@
         .front-border { width: 90%; height: 85%; border: 1.5px solid var(--gold); display: flex; justify-content: center; align-items: center; }
         .front-text { color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-style: italic; font-size: 11px; }
         
-        .back { background: #15251a; transform: rotateY(180deg); }
-        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 46vw solid transparent; border-right: 46vw solid transparent; border-top: 130px solid #243d2c; transform-origin: top; transition: 0.6s; z-index: 10; }
+        .back { background: #15251a; transform: rotateY(180deg); position: relative; }
+        
+        /* SOLAPA CORREGIDA: Ajuste dinámico al ancho del sobre */
+        .flap { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 0; 
+            border-left: 46vw solid transparent; 
+            border-right: 46vw solid transparent; 
+            border-top: 130px solid #243d2c; 
+            transform-origin: top; transition: 0.6s; z-index: 10;
+            box-sizing: border-box;
+        }
+        @media (min-width: 413px) {
+            .flap { border-left: 190px solid transparent; border-right: 190px solid transparent; }
+        }
 
-        /* SELLO "G" CENTRADO Y DERECHO */
-        .wax-seal { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; color: var(--gold); font-size: 24px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        /* SELLO "G" PERFECTAMENTE CENTRADO */
+        .wax-seal { 
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%); 
+            width: 65px; height: 65px; background: radial-gradient(circle at 30% 30%, #a30000, #5a0000); 
+            border-radius: 50%; z-index: 11; display: flex; justify-content: center; align-items: center; 
+            color: var(--gold); font-size: 26px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+        }
         
         .card { position: absolute; top: 10px; left: 10px; width: calc(100% - 20px); height: 100%; background: var(--paper); padding: 20px; box-sizing: border-box; transition: 0.8s; opacity: 0; z-index: 5; overflow: hidden; }
         .is-open .flap { transform: rotateX(180deg); z-index: 1; }
@@ -42,8 +60,7 @@
         .card-content { border: 1px solid var(--gold); height: 100%; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
         .message { font-size: 15px; line-height: 1.4; font-style: italic; color: #2c3e50; margin: 10px 0; }
         
-        /* BOTONES SI / NO */
-        .btn-container { display: flex; justify-content: space-around; margin-top: 20px; gap: 10px; }
+        .btn-container { display: flex; justify-content: space-around; margin-top: 15px; gap: 10px; }
         .btn { background: var(--env-green); color: var(--gold); border: 1px solid var(--gold); padding: 8px 5px; border-radius: 4px; font-size: 10px; cursor: pointer; flex: 1; text-decoration: none; display: flex; flex-direction: column; align-items: center; font-weight: bold; }
         .btn span { font-size: 8px; font-weight: normal; margin-top: 4px; text-transform: none; }
 
@@ -85,14 +102,12 @@
                         <div class="card-content">
                             <div style="font-size: 10px; color: var(--gold); margin-bottom: 5px;" id="card-date">FECHA</div>
                             <p class="message" id="card-message"></p>
-                            
                             <div id="valentin-btns" style="display:none">
                                 <div class="btn-container">
                                     <div class="btn" onclick="closeEnvelope()">SI <span>(Mándame 2 Besos)</span></div>
                                     <div class="btn" onclick="closeEnvelope()">NO <span>(Mándame un Beso)</span></div>
                                 </div>
                             </div>
-
                             <div style="font-size: 16px; color: var(--env-green); font-weight: bold; margin-top: 10px;">Con amor, <span style="font-family: \'Brush Script MT\', cursive; font-size: 20px; display: block;">Gael Ruiz</span></div>
                         </div>
                     </div>
@@ -117,16 +132,11 @@
             document.getElementById('envelope-overlay').style.display = 'flex';
             hint.innerText = "Presiona el sobre";
         }
-
         function flipEnvelope() { env.classList.add('is-flipped'); hint.innerText = "Presiona la G"; }
         function openCard(e) { e.stopPropagation(); env.classList.add('is-open'); hint.innerText = "Cuando termines presiona la carta"; }
-        
         function closeEnvelope() {
             env.classList.remove('is-open');
-            setTimeout(() => {
-                env.classList.remove('is-flipped');
-                setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800);
-            }, 800);
+            setTimeout(() => { env.classList.remove('is-flipped'); setTimeout(() => { document.getElementById('envelope-overlay').style.display = 'none'; }, 800); }, 800);
         }
     </script>
 </body>
